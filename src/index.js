@@ -1,6 +1,7 @@
 import * as THREE from "three"
 import Movements from "./movement.js"
 import polygon from "./Web3.js"
+import abi from "./abi/abi.json" assert { type: "json" }
 
 // 1. Setting up the Scene
 
@@ -93,6 +94,48 @@ function animate() {
 animate()
 
 renderer.render(scene, camera)
+
+const button = document.querySelector("#mint")
+button.addEventListener("click", mintNFT)
+
+async function mintNFT() {
+    let nft_name = document.querySelector("#nft_name").value
+    let nft_width = document.querySelector("#nft_width").value
+    let nft_height = document.querySelector("#nft_height").value
+    let nft_depth = document.querySelector("#nft_depth").value
+    let nft_x = document.querySelector("#nft_x").value
+    let nft_y = document.querySelector("#nft_y").value
+    let nft_z = document.querySelector("#nft_z").value
+
+    if (typeof window.ethereum == "undefined") {
+        rej("You should install Metamask")
+    }
+
+    let web3 = new Web3(window.ethereum)
+    let contract = new web3.eth.Contract(
+        abi,
+        "0x89062c43999adc1709a1da07da086def46569cc2"
+    )
+    web3.eth.requestAccounts().then((accounts) => {
+        contract.methods
+            .mint(
+                nft_name,
+                nft_width,
+                nft_height,
+                nft_depth,
+                nft_x,
+                nft_y,
+                nft_z
+            )
+            .send({
+                from: accounts[0],
+                value: "10",
+            })
+            .then((data) => {
+                console.log("NFT is minted")
+            })
+    })
+}
 
 polygon.then((result) => {
     console.log("Hi!")
