@@ -1,5 +1,6 @@
 import * as THREE from "three"
 import Movements from "./movement.js"
+import polygon from "./Web3.js"
 
 // 1. Setting up the Scene
 
@@ -31,38 +32,35 @@ const material_area = new THREE.MeshPhongMaterial({ color: 0xef3 })
 const area = new THREE.Mesh(geometry_area, material_area)
 scene.add(area)
 
-const geometry = new THREE.BoxGeometry(1, 1, 1)
-const material = new THREE.MeshPhongMaterial({ color: 0x00ff00 })
-const cube = new THREE.Mesh(geometry, material)
-scene.add(cube)
+// const geometry_cly = new THREE.CylinderGeometry(5, 5, 20, 32)
+// const material_cly = new THREE.MeshPhongMaterial({ color: 0xffff00 })
+// const cylinder = new THREE.Mesh(geometry_cly, material_cly)
+// scene.add(cylinder)
 
-const geometry_cly = new THREE.CylinderGeometry(5, 5, 20, 32)
-const material_cly = new THREE.MeshPhongMaterial({ color: 0xffff00 })
-const cylinder = new THREE.Mesh(geometry_cly, material_cly)
-scene.add(cylinder)
-
-const geometry_cone = new THREE.ConeGeometry(5, 20, 32)
-const material_cone = new THREE.MeshPhongMaterial({ color: 0xffff00 })
-const cone = new THREE.Mesh(geometry_cone, material_cone)
-scene.add(cone)
+// const geometry_cone = new THREE.ConeGeometry(5, 20, 32)
+// const material_cone = new THREE.MeshPhongMaterial({ color: 0xffff00 })
+// const cone = new THREE.Mesh(geometry_cone, material_cone)
+// scene.add(cone)
 
 camera.position.z = 5
 camera.position.set(10, 15, 45)
 
 function animate() {
     // Adding rotation to the cube object
-    cube.rotation.x += 0.01
-    cube.rotation.y += 0.01
+    // cube.rotation.x += 0.01
+    // cube.rotation.y += 0.01
 
-    cylinder.rotation.x += 0.01
-    cylinder.rotation.y += 0.01
+    /*
+        cylinder.rotation.x += 0.01
+        cylinder.rotation.y += 0.01
 
-    cylinder.position.set(10, 1, 1)
+        cylinder.position.set(10, 1, 1)
 
-    cone.rotation.x += 0.01
-    cone.rotation.y += 0.01
+        cone.rotation.x += 0.01
+        cone.rotation.y += 0.01
 
-    cone.position.set(-10, 1, 1)
+        cone.position.set(-10, 1, 1)
+    */
 
     // Adding translation to the cube object
     // cube.position.z += 0.01
@@ -95,3 +93,24 @@ function animate() {
 animate()
 
 renderer.render(scene, camera)
+
+polygon.then((result) => {
+    console.log("Hi!")
+    result.nft.forEach((object, index) => {
+        if (index <= result.supply) {
+            const geometry = new THREE.BoxGeometry(
+                Number(object.w),
+                Number(object.h),
+                Number(object.d)
+            )
+            const material = new THREE.MeshPhongMaterial({ color: 0x00ff00 })
+            const nft = new THREE.Mesh(geometry, material)
+            nft.position.set(
+                Number(object.x),
+                Number(object.y),
+                Number(object.z)
+            )
+            scene.add(nft)
+        }
+    })
+})
